@@ -1,0 +1,41 @@
+<?php include("../connect/conn.php");
+$id=$_GET['id'];
+$update=$_POST['update'];
+
+$detail_benefit_id=$_POST['detail_benefit_id'];
+$trainnig_id=$_POST['trainnig_id'];
+$description=$_POST['description'];
+
+        if(isset($update)=="true"){
+            $update="update detail_benefit set trainnig_id='$trainnig_id',description='$description' where detail_benefit_id ='$detail_benefit_id'";
+            $res_update=mysqli_query($conn,$update);
+            echo "<script> alert ('แก้ไขข้อมูลสำเร็จ');
+                     window.location='select_benefit.php.php';
+                 </script>";
+        }
+        if(isset($id)=="true"){
+                $sql="select * from detail_benefit where detail_benefit_id = '{$id}'";
+                $res=mysqli_query($conn,$sql);
+                $row=mysqli_fetch_assoc($res);
+    ?>
+        <form method= "post" action="">
+            <input type="hidden" name="detail_benefit_id" value="<?php echo $row["detail_benefit_id"];?>">
+        <table border="1">
+            <tr>
+                <th>เลขทะเบียนรถ</th>
+                <th><?php echo $row["detail_benefit_id"];?></th>
+            </tr>
+            <tr>
+                <th>แบรน</th>
+                <th> <input type="text" name="trainnig_id"value="<?php echo $row["trainnig_id"];?>"></th>
+            </tr>
+            <tr>
+                <th>ประเภทรถ</th>
+                <th> <input type="text" name="description"value="<?php echo $row["description"];?>"></th>
+            </tr>
+            <tr><th colspan="2"><input type="submit" name="update" value="แก้ไข"></th></tr>
+        </table>
+        </form>
+<?php
+    }
+?>

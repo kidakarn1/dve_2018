@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+        <meta name="author" content="GeeksLabs">
+        <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+        <link rel="shortcut icon" href="../img/favicon.png">
+
+        <!-- Bootstrap CSS -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- bootstrap theme -->
+        <link href="../css/bootstrap-theme.css" rel="stylesheet">
+        <!--external css-->
+        <!-- font icon -->
+        <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" />
+        <!-- full calendar css-->
+        <link href="../assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+        <link href="../assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+        <!-- easy pie chart-->
+        <link href="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
+        <!-- owl carousel -->
+        <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+        <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="../css/fullcalendar.css">
+        <link href="../css/widgets.css" rel="stylesheet">
+        <link href="../css/style.css" rel="stylesheet"> 
+        <link href="../css/style-responsive.css" rel="stylesheet" />
+        <link href="../css/xcharts.min.css" rel=" stylesheet">
+        <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+  <title>Document</title>
+     <?php include '../menu2.php';?>
+	 <section id="main-content">
+<section class="wrapper">
+ <div class="col-lg-12">
+                    <h3 class="page-header" style="color: red;"><i style="color: red;" class="icon_key_alt"></i><b>กรุณากรอกข้อมูลผู้ประเมิน</b></h3>
+                </div>
+
+
+
+<form method="post" action="print_satisfied.php"class="form-horizontal">
+<table border="1"class="table">
+    <tr>
+
+        <tr><td>ตำแหน่งผู้ประเมิน</td><td><input type="radio" id="1" name="position" value="เจ้าของกิจการ">เจ้าของกิจการ</td></tr>
+        <tr><td></td><td><input type="radio" id="2"name="position"><input type="text" id="show_2" name="position1">ผู้จัดการฝ่าย</td></tr>
+        <tr><td></td><td><input type="radio" id="3"   name="position" value="หัวหน้างาน">หัวหน้างาน</td></tr>
+        <tr><td></td><td><input type="radio" id="4"        name="position"><input type="text" id="show_4" name="position2">อื่นๆ</td></tr>
+        <tr><td></td><td><input type="radio" id="5"name="position"><input type="text" id="show_5" name="position3">บุคคลในชุมชนอาชีพ</td></tr>
+    </tr>
+<tr>
+        <td colspan="2">ข้อมูล</td></tr>
+    <tr>
+        <td>เพศ</td><td></td></tr>
+        <tr><td></td><td><input type="radio" id="1" name="sex" value="ชาย">ชาย</td>
+        <td><input type="radio" id="2"  name="sex" value="หญิง">หญิง</td></tr>
+        <td>ทั้งชายและหญิง<input type="radio" id="3"   name="sex" value="ทั้งชายและหญิง"></td>
+    </tr>
+    <tr>
+        <td>กำลังศึกษาระดับ</td>
+        <td>ปวช<input type="radio" id="1" name="edu" value="ปวช"></td>
+        <td>ปวส<input type="radio" id="2"  name="edu" value="ปวส"></td>
+        <td>ทั้งปวช และ ปวส.<input type="radio" id="3"   name="edu" value="ทั้งปวช และ ปวส"></td>
+    </tr>
+    <tr>
+        <td>แผนกวิชา</td>
+        <td><input type="text"  name="major" ></td>
+    </tr>
+</table>
+<input type="submit">
+</form>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script>
+$(document).ready(function(){
+    $("#show_2").hide();
+    $("#show_4").hide();
+    $("#show_5").hide();
+    $("#1").click(function(){
+        $("#show_2").hide();
+        $("#show_4").hide();
+        $("#show_5").hide();
+        // $(".set").html("value='เจ้าของกิจการ'");
+    });
+    $("#2").click(function(){
+        $("#show_2").show();
+        $("#show_4").hide();
+        $("#show_5").hide();
+    });
+    $("#3").click(function(){
+        $("#show_2").hide();
+        $("#show_4").hide();
+        $("#show_5").hide();
+    });
+    $("#4").click(function(){
+        $("#show_2").hide();
+        $("#show_4").show();
+        $("#show_5").hide();
+    });
+    $("#5").click(function(){
+        $("#show_2").hide();
+        $("#show_4").hide();
+        $("#show_5").show();
+    });
+});
+</script>

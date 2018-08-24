@@ -1,0 +1,416 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+        <meta name="author" content="GeeksLabs">
+        <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+        <link rel="shortcut icon" href="../img/favicon.png">
+        <title>edit_student</title>
+        <!-- Bootstrap CSS -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- bootstrap theme -->
+        <link href="../css/bootstrap-theme.css" rel="stylesheet">
+        <!--external css-->
+        <!-- font icon -->
+        <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" />
+        <!-- full calendar css-->
+        <link href="../assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+        <link href="../assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+        <!-- easy pie chart-->
+        <link href="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
+        <!-- owl carousel -->
+        <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+        <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="../css/fullcalendar.css">
+        <link href="../css/widgets.css" rel="stylesheet">
+        <link href="../css/style.css" rel="stylesheet">
+        <link href="../css/style-responsive.css" rel="stylesheet" />
+        <link href="../css/xcharts.min.css" rel=" stylesheet">
+        <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+        <meta charset="UTF-8">
+
+        <?php
+        include('../connect/conn.php');
+        $connect = $conn;
+        $bus_id = $_GET['id'];
+        $sql_id = "select * from business where business_id = '$bus_id'";
+        $res_id = mysqli_query($conn, $sql_id);
+        $row_id = mysqli_fetch_assoc($res_id);
+        $tombol = $row_id['district_id'];
+        $resDistrict = select_district($conn);
+        $res_business = select_business($connect);
+
+  $res_district=select_district($connect);
+  $res_amphur=select_amphur($connect);
+  $res_province=select_province($connect);
+
+        ?>
+    </head>
+    <body>
+        <?php include '../menu2.php'; ?>
+        <section id="main-content">
+            <section class="wrapper">
+
+
+                <form class="form-horizontal" method="post"  action="edit_business_sql.php">
+                    <input type="hidden" name="business_id" value="<?php echo ['business_id']; ?>">
+                    
+					
+					<div class="form-group">
+                    <label class="col-sm-5 control-label control-label" for="business_name" >ชื่อสถานประกอบการ</label>
+                    <div class="col-sm-4">
+                    <input class="form-control" list="business_name" name="business_name" value="<?php echo $row_id['business_name']; ?>">
+
+                    <datalist id="business_name">
+                    <?php while ($row_business = mysqli_fetch_assoc($res_business)) { ?>
+                    <option value="<?php echo $row_business['business_name'] ?>"></option>
+                    <?php } ?>
+                    </datalist>
+                    </div>
+                    </div>
+
+
+					<div class="form-group">
+                   <label class="col-sm-5 control-label" for="parent_business_id">parent_business_id</label>
+                   <div class="col-sm-3">
+				   <input class="form-control" type="text" name="parent_business_id" value="<?php echo $row_id['parent_business_id'] ?>">
+                   </div>
+                   </div>
+
+                    
+                   <div class="form-group">
+                   <label class="col-sm-5 control-label" for="business_size">ขนาดสถานประกอบการ</label>
+                   <div class="col-sm-3">
+				   <input class="form-control" type="text" name="business_size" value="<?php echo $row_id['business_size'] ?>">
+                   </div>
+                   </div>
+                   
+                   <div class="form-group">
+                   <label class="col-sm-5 control-label" for="jop_description">ลักษณะงาน	</label>
+                   <div class="col-sm-3">
+                   <input class="form-control" type="text" id="jop_description" name="jop_description" value="<?php echo $row_id['jop_description'] ?>">
+                   </div>
+                   </div>
+
+                    <div class="form-group">
+                    <label class="col-sm-5 control-label" for="amount_emp">จำนวนพนักงาน</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="amount_emp" name="amount_emp" value="<?php echo $row_id['amount_emp'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="address_no">เลขที่ตั้ง</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="address_no" name="address_no" value="<?php echo $row_id['address_no'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="road">ถนน</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="road" name="road" value="<?php echo $row_id['road'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="district_id">ตำบล</label>
+                    <div class="col-sm-3">
+                      <select>
+		<?php while($row_district=mysqli_fetch_assoc($res_district)){?>
+        <option value="<?php echo $row_district["DISTRICT_id"]?>" ><?php echo $row_district["DISTRICT_NAME"]?></option>
+		<?php }?>
+        </select>
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="aumphur_id">อำเภอ</label>
+                    <div class="col-sm-3">
+                    <select>
+		<?php while($row_amphur=mysqli_fetch_assoc($res_amphur)){?>
+        <option value="<?php echo $row_amphur["AMPHUR_id"]?>" ><?php echo $row_amphur["AMPHUR_NAME"]?></option>
+		<?php }?>
+        </select>
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="province_id">จังหวัด</label>
+                    <div class="col-sm-3">
+                    <select>
+		<?php while($row_province=mysqli_fetch_assoc($res_province)){?>
+        <option value="<?php echo $row_province["PROVINCE_id"]?>" ><?php echo $row_province["PROVINCE_NAME"]?></option>
+		<?php }?>
+        </select>
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="postcode">รหัสไปรษณีย์</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="postcode" name="postcode" value="<?php echo $row_id['postcode'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="land">ประเทศ</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="land" name="land" value="<?php echo $row_id['land'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="email">อีเมล์</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="email" id="email" placeholder="Kidakarn@gmail.com"name="email" value="<?php echo $row_id['email'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="contact">ชื่อผู้ประสานงาน</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="contact" name="contact" value="<?php echo $row_id['contact'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="contact_phone">เบอร์โทรศัพท์ผู้ประสานงาน	</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="contact_phone" name="contact_phone" value="<?php echo $row_id['contact_phone'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="do_mou">การทำ MOU</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="do_mou" name="do_mou" value="<?php echo $row_id['do_mou'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="registration_date">วันที่จดทะเบียน</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="date" id="registration_date" name="registration_date" value="<?php echo $row_id['registration_date'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="capital">ทุนจดทะเบียน</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="capital" name="capital" value="<?php echo $row_id['capital'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="country">ประเทศต้นสังกัด</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="country" name="country" value="<?php echo $row_id['country'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="tax_break">การลดหย่อนภาษี</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="tax_break" name="tax_break" value="<?php echo $row_id['tax_break'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="property_id">รหัสคุณลักษณะสถานประกอบการ เก็บข้อมูลแบบเป็นชุด</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="property_id" name="property_id" value="<?php echo $row_id['property_id'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="benefit_id">เก็บข้อมูลสวัสดิการ เก็บเป็น Array</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="benefit_id" name="benefit_id" value="<?php echo $row_id['benefit_id'] ?>">
+                    </div>
+                    </div>
+
+					
+                    <div class="form-group">
+                    <label class="col-sm-5 control-label" for="capital">พิกัดแผนที่</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" placeholder="หาจาก google maps" id="capital" name="capital" value="<?php echo $row_id['location'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="status">status</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="status" name="status" value="<?php echo $row_id['status'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="name_of_the_signatory">	ชื่อผู้ลงนามในใบประกาศ	</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="name_of_the_signatory" name="name_of_the_signatory" value="<?php echo $row_id['name_of_the_signatory'] ?>">
+                    </div>
+                    </div>
+
+					<div class="form-group">
+                    <label class="col-sm-5 control-label" for="position">ตำแหน่ง</label>
+                    <div class="col-sm-3">
+                    <input class="form-control" type="text" id="position" name="position" value="<?php echo $row_id['position'] ?>">
+                    </div>
+                    </div>
+
+
+					
+                   
+                    <div class="text-center">
+                    <label  for="tax_break" ><u>คำชี้แจง</u>กรุณาคลิกในช่องที่ตรงกับคุณลักษณะของสถานประกอบการ</label>
+                    </div>
+
+
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary" name="submit">บันทึกข้อมูล</button>
+                    </div>
+                </form>
+
+
+            </section>
+        </section>
+        <script src="../js/jquery.js"></script>
+        <script src="../js/jquery-ui-1.10.4.min.js"></script>
+        <script src="../js/jquery-1.8.3.min.js"></script>
+        <script type="text/javascript" src="../js/jquery-ui-1.9.2.custom.min.js"></script>
+        <!-- bootstrap -->
+        <script src="../js/bootstrap.min.js"></script>
+        <!-- nice scroll -->
+        <script src="../js/jquery.scrollTo.min.js"></script>
+        <script src="../js/jquery.nicescroll.js" type="text/javascript"></script>
+        <!-- charts scripts -->
+        <script src="../assets/jquery-knob/js/jquery.knob.js"></script>
+        <script src="../js/jquery.sparkline.js" type="text/javascript"></script>
+        <script src="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js"></script>
+        <script src="../js/owl.carousel.js"></script>
+        <!-- jQuery full calendar -->
+        <script src="../js/fullcalendar.min.js"></script>
+        <!-- Full Google Calendar - Calendar -->
+        <script src="../assets/fullcalendar/fullcalendar/fullcalendar.js"></script>
+        <!--script for this page only-->
+        <script src="../js/calendar-custom.js"></script>
+        <script src="../js/jquery.rateit.min.js"></script>
+        <!-- custom select -->
+        <script src="../js/jquery.customSelect.min.js"></script>
+        <script src="../assets/chart-master/Chart.js"></script>
+
+        <!--custome script for all page-->
+        <script src="../js/scripts.js"></script>
+        <!-- custom script for this page-->
+        <script src="../js/sparkline-chart.js"></script>
+        <script src="../js/easy-pie-chart.js"></script>
+        <script src="../js/jquery-jvectormap-1.2.2.min.js"></script>
+        <script src="../js/jquery-jvectormap-world-mill-en.js"></script>
+        <script src="../js/xcharts.min.js"></script>
+        <script src="../js/jquery.autosize.min.js"></script>
+        <script src="../js/jquery.placeholder.min.js"></script>
+        <script src="../js/gdp-data.js"></script>
+        <script src="../js/morris.min.js"></script>
+        <script src="../js/sparklines.js"></script>
+        <script src="../js/charts.js"></script>
+        <script src="../js/jquery.slimscroll.min.js"></script>
+        <script>
+            //knob
+            $(function () {
+                $(".knob").knob({
+                    'draw': function () {
+                        $(this.i).val(this.cv + '%')
+                    }
+                })
+            });
+
+            //carousel
+            $(document).ready(function () {
+                $("#owl-slider").owlCarousel({
+                    navigation: true,
+                    slideSpeed: 300,
+                    paginationSpeed: 400,
+                    singleItem: true
+
+                });
+            });
+
+            //custom select box
+
+            $(function () {
+                $('select.styled').customSelect();
+            });
+
+            /* ---------- Map ---------- */
+            $(function () {
+                $('#map').vectorMap({
+                    map: 'world_mill_en',
+                    series: {
+                        regions: [{
+                                values: gdpData,
+                                scale: ['#000', '#000'],
+                                normalizeFunction: 'polynomial'
+                            }]
+                    },
+                    backgroundColor: '#eef3f7',
+                    onLabelShow: function (e, el, code) {
+                        el.html(el.html() + ' (GDP - ' + gdpData[code] + ')');
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>
+<?php
+
+function do_validate($data) {
+    $valid = true;
+    $data = &$_POST;
+    if (empty($data['business_name'])) {
+        //set_err('กรุณากรอกชื่อสถานประกอบการ');
+        $valid = false;
+    }
+    if (empty($data['address_no'])) {
+        //set_err('กรุณากรอกเลขที่');
+        $valid = false;
+    }
+    if (empty($data['district_id'])) {
+        //set_err('กรุณากรอกตำบล');
+        $valid = false;
+    }
+    if (!preg_match('/[0-9]{1,}/', $data['contact_phone'])) {
+        //set_err('กรุณากรอกเบอร์โทรศัพท์');
+        $valid = false;
+    }
+
+    return $valid;
+}
+
+?>
+<?php function select_district($connect) {
+    $sql = "select * from district";
+    $res = mysqli_query($connect, $sql);
+    return $res;
+}
+function select_business($connect) {
+    $sql = "select * from business";
+    $res = mysqli_query($connect, $sql);
+    return $res;
+}
+?>
+	<?php 
+	function select_amphur($connect){
+	$sql="select * from amphur";
+	$res=mysqli_query($connect,$sql);
+	return $res;
+	}
+	function select_province($connect){
+	$sql="select * from province";
+	$res=mysqli_query($connect,$sql);
+	return $res;
+	}?>

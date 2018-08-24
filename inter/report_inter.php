@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+        <meta name="author" content="GeeksLabs">
+        <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+        <link rel="shortcut icon" href="../img/favicon.png">
+
+        <title>select_department</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- bootstrap theme -->
+        <link href="../css/bootstrap-theme.css" rel="stylesheet">
+        <!--external css-->
+        <!-- font icon -->
+        <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" />
+        <!-- full calendar css-->
+        <link href="../assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+        <link href="../assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+        <!-- easy pie chart-->
+        <link href="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
+        <!-- owl carousel -->
+        <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+        <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="../css/fullcalendar.css">
+        <link href="../css/widgets.css" rel="stylesheet">
+        <link href="../css/style.css" rel="stylesheet"> 
+        <link href="../css/style-responsive.css" rel="stylesheet" />
+        <link href="../css/xcharts.min.css" rel=" stylesheet">
+        <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+        <script src="../jquery/jquery.min.js"></script>
+        <script src="../jquery-easing/jquery.easing.min.js"></script>
+    </head>
+    <body>
+        <?php include '../menu2.php'; ?>
+        <section id="main-content">
+            <section class="wrapper">
+                <div class="col-sm-12">
+                    <h3 class="page-header" style="color: red;"><i style="color: red;" class="icon_genius"></i><b>แผนการฝึกงาน</b></h3>
+                </div>
+                <table border = "1"  width="70%" align = "center">
+                    <tr>
+                        <td COLSPAN ="7"><center>แผนการฝึกงาน/ฝึกอาชีพ ในสถานะประกอบการของนักเรียนนักศึกษา วิทยาลัยเทคนิคชลบุรี</center></td>
+                    </tr>
+                    <?php
+                    include('../connect/conn.php');
+                    $inter_year = $_POST["inter_year"];
+                    $sqlDep = "select * from department,training_plan,groups where training_plan.group_id = groups.group_id and department.dep_id = groups.dep_id and inter_year = '$inter_year' group by groups.dep_id";
+                    $resDep = mysqli_query($conn, $sqlDep);
+                    while ($rowDep = mysqli_fetch_array($resDep)) {
+                        ?>
+                        <tr>
+                            <td COLSPAN ="7"><center><?php echo "ช่าง" . $rowDep["dep_name"] ?></center></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2"><center>ประเภทการฝึก/ระดับชั้น</center></td>
+                        <td COLSPAN ="3"><center>ปีการศึกษา <?php echo $inter_year; ?></center></td>
+                        </tr>
+                        <tr>
+                            <td>ภาคเรียนที่ 1</td>
+                            <td>ภาคเรียนที่ 2</td>
+                            <td>ภาคฤดูร้อน</td>
+                        </tr>
+                        <?php
+                        $dep_id = $rowDep["dep_id"];
+                        $sqlInter = "select * from training_plan,groups where groups.group_id = training_plan.group_id and groups.dep_id = '$dep_id'and
+  inter_year = '$inter_year' group by training_plan.system_id";
+                        $resInter = mysqli_query($conn, $sqlInter);
+                        while ($rowInter = mysqli_fetch_array($resInter)) {
+                            ?>
+                            <tr>
+                                <td>
+                                    <?php
+                                    if ($rowInter["system_id"] == 1) {
+                                        echo "ฝึกงาน " . " (ระบบปกติ)";
+                                    } else {
+                                        echo "ฝึกอาชีพ " . " (ระบบทวิภาคี)";
+                                    } if (strpos(trim($rowInter["group_name"]), "ส") == 0) {
+                                        echo "ปวส.";
+                                    } else {
+                                        echo "ปวช.";
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    $system_id = $rowInter["system_id"];
+                                    $group_id = $rowInter["group_id"];
+                                    $sqlInterData = "select * from training_plan,groups where training_plan.group_id = groups.group_id and groups.dep_id = '$dep_id' and system_id = '$system_id' and term = '1' and inter_year = '$inter_year'";
+                                    $resInterData = mysqli_query($conn, $sqlInterData);
+                                    while ($rowInterData = mysqli_fetch_array($resInterData)) {
+                                        echo $rowInterData["group_name"] . " วันที่ " . str_replace('-', '/', $rowInterData["start_date"]) . " - " . str_replace('-', '/', $rowInterData["end_date"]) . "<br>";
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    $sqlInterData2 = "select * from training_plan,groups where training_plan.group_id = groups.group_id and groups.dep_id = '$dep_id' and system_id = '$system_id' and term = '2' and inter_year = '$inter_year'";
+                                    $resInterData2 = mysqli_query($conn, $sqlInterData2);
+                                    while ($rowInterData2 = mysqli_fetch_array($resInterData2)) {
+                                        echo $rowInterData2["edu_year"] . "/" . $rowInterData2["group_id"] . " วันที่ " . str_replace('-', '/', $rowInterData2["start_date"]) . " - " . str_replace('-', '/', $rowInterData2["end_date"]) . "<br>";
+                                    }
+                                    ?>
+                                </td>
+                                <td>
+                                    <?php
+                                    $sqlInterData3 = "select * from training_plan,groups where training_plan.group_id = groups.group_id and groups.dep_id = '$dep_id' and system_id = '$system_id' and term = '3' and inter_year = '$inter_year'";
+                                    $resInterData3 = mysqli_query($conn, $sqlInterData3);
+                                    while ($rowInterData3 = mysqli_fetch_array($resInterData3)) {
+                                        echo $rowInterData3["edu_year"] . "/" . $rowInterData3["group_id"] . " วันที่ " . str_replace('-', '/', $rowInterData3["start_date"]) . " - " . str_replace('-', '/', $rowInterData3["end_date"]) . "<br>";
+                                    }
+                                    ?>
+                                </td>
+                            </tr>
+                            <tr>
+                            <?php } ?>
+                    </table>
+                    <table border="1" width="70%" align="center">
+                    <?php } ?>
+            </section>
+        </section>
+    </body>
+</html>

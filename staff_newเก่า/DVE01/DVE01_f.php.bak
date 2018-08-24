@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Resi Bootstrap Template</title>
+
+        <!-- Bootstrap -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/responsive-slider.css" rel="stylesheet">
+        <link rel="stylesheet" href="css/animate.css">
+        <link rel="stylesheet" href="css/font-awesome.min.css">
+        <link href="css/style.css" rel="stylesheet">	
+        <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+        <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+        <![endif]-->
+		<script src="../jquery/jquery.min.js"></script>
+		<script src="../jquery-easing/jquery.easing.min.js"></script>
+		<?php
+			include('../../connect/conn.php');	
+			$connect = $conn;
+			$std_id = $_GET["std_id"];
+			$edu = substr($std_id,2,1);
+			$res = select_dve01($connect,$std_id);
+			$row = mysqli_fetch_array($res);
+			$resEdu = select_edu($connect);
+			$resGroup = select_group($connect);
+			$resMajor = select_major($connect);
+		?>
+    </head>
+    <body>
+        <!--        <header>
+                    <div class="container">
+                        <div class="row">
+                            <nav class="navbar navbar-default" role="navigation">
+                                <div class="container-fluid">
+                                    <div class="navbar-header">
+                                        <div class="navbar-brand">
+                                            <a href="index.html"><h1>Resi</h1></a>
+                                        </div>
+                                    </div>
+                                    <div class="menu">
+                                        <ul class="nav nav-tabs" role="tablist">
+                                            <li role="presentation" class="active"><a href="index.html">Home</a></li>
+                                            <li role="presentation"><a href="dve01.php">DVE01</a></li>
+                                            <li role="presentation"><a href="dve03.php">DVE03</a></li>
+                                            <li role="presentation"><a href="yinyom.php">หนังสือยินยอม</a></li>
+                                            <li role="presentation"><a href="book.php">หนังสือแจ้งการฝึกงาน</a></li>
+                                            <li role="presentation"><a href="book2.php">หนังสืออนุญาตการฝึกงาน</a></li>	
+        
+                                        </ul>
+                                    </div>
+                                </div>			
+                            </nav>
+                        </div>
+                    </div>
+                </header>-->
+ <table border="1">
+  <tr><td colspan="4"ALIGN = "RIGHT"><b>DVE.01_f</b></p></td></tr>
+	<form method="post" action="DVE01.php">
+    <tr>
+	<tr>
+	<td colspan="2">รหัสประจำตัว <input type="text" name="std_id" value="<?php echo $row["student_id"] ?>" id="std_id"></td>
+	</tr>
+	<tr>
+	<td rowspan="2"><font id="Wstd_id" color="red"><center>*กรุณากรอกรหัสประจำตัว*</center></font></td>
+	</tr>
+	<tr></tr>
+	<tr>
+	<td>ข้าพเจ้า <select name="sex">
+		<option value="M" selected>นาย
+		<option value="F">นางสาว
+		<!-- <option value="">ไม่มีนาง? -->
+    </select>
+	ชื่อ <input type="text" name="std_fname" value="<?php echo $row["stu_fname"]?>" id="std_fname">
+	</td>
+    <td>สกุล <input type="text" name="std_lname" value="<?php echo $row["stu_lname"]?>" id="std_lname"> </td>
+	</tr>
+	<tr>
+	<td rowspan="2"><font id="Wstd_fname" color="red"><center>*กรุณากรอกชื่อ*</center></font></td>
+	<td rowspan="2"><font id="Wstd_lname" color="red"><center>*กรุณากรอกสกุล*</center></font></td>
+	</tr>
+	<tr></tr>
+
+	<tr>
+	<td>นักศึกษาระดับ <input type="radio" name="edu" value="2" 
+	<?php if ($edu == 2) {echo "checked";}?>>ปวช <input type="radio" name="edu" value="3"<?php if ($edu == 3) {echo "checked";}?>>ปวส 
+	</td>
+	<td>
+	ปีที่ <select name="edu_year">
+		<option value="1"selected>1
+		<option value="2">2
+		<option value="3">3
+    </select>
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2">กลุ่ม <select name="group">
+		<?php while($rowGro = mysqli_fetch_array($resGroup)) {?>
+			<option value="<?php echo $rowGro['group_name'] ?>">
+				<?php echo $rowGro['group_name'] ?>
+			</option>
+		<?php }?>
+	</select>
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2">แผนกวิชา <select name="major_name">
+		<?php while($rowMajor = mysqli_fetch_array($resMajor)) {?>
+			<option value="<?php echo $rowMajor['major_name'] ?>">
+				<?php echo $rowMajor['major_name'] ?>
+			</option>
+		<?php }?>
+	</select>
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2"><input type="radio" name="system" value="1"> ระบบปกติ <input type="radio" name="system" value="5"> ระบบทวิภาคี  
+	</td>
+	</tr>
+	<tr>
+	<td colspan="2">มีผลการเรียนเฉลี่ยสะสม <input type="text" name="gpa" value="<?php echo $row['gpa'] ?>" id="gpa"></td>
+	</tr>
+	<tr>
+	<td rowspan="2"><font id="Wgpa" color="red"><center>*กรุณากรอกผลการเรียนเฉลี่ยสะสม*</center></font></td>
+	</tr>
+	<tr></tr>
+	<tr>
+	<td colspan="2">ชื่อผู้ปกครอง <input type="text" name="par_name" value="<?php echo $row["par_fname"]." ".$row["par_lname"]?>" id="par_name"></td>
+	</tr>
+	<tr><td rowspan="2"><font id="Wpar_name" color="red"><center>*กรุณากรอกชื่อผู้ปกครอง*</center></font></td></tr>
+	<tr></tr>
+	<tr><td colspan="2"><center>
+	<input type="submit" value="ตกลง" id="submit"></center></td></tr>
+	</form>
+<!-- Responsive slider - START -->
+<!-- <div class="slider">
+        <div class="">
+                <div class="">
+                        <div class="responsive-slider" data-spy="responsive-slider" data-autoplay="true">
+                                <div class="slides" data-group="slides">						
+                                        <ul>
+                                                <li>
+                                                        <div class="slide-body" data-group="slide">
+                                                                <img src="img/3.jpg" alt="" class="img-responsive" >
+                                                        </div>					
+                                                </li>
+                                                <li>
+                                                        <div class="slide-body" data-group="slide">
+                                                                <img src="img/6.jpg" alt="" class="img-responsive" >
+                                                        </div>
+                                                </li>
+                                                <li>
+                                                        <div class="slide-body" data-group="slide">
+                                                                <img src="img/5.jpg" alt="" class="img-responsive" >									
+                                                        </div>
+                                                </li>					
+                                        </ul>
+                                </div>		 -->	   
+
+<!--start footer-->
+<!--<footer>
+
+
+    <div class="sub-footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <ul class="social-network">
+                        <li><a href="#" data-placement="top" title="Facebook"><i class="fa fa-facebook fa-1x"></i></a></li>
+                        <li><a href="#" data-placement="top" title="Twitter"><i class="fa fa-twitter fa-1x"></i></a></li>
+                        <li><a href="#" data-placement="top" title="Linkedin"><i class="fa fa-linkedin fa-1x"></i></a></li>
+                        <li><a href="#" data-placement="top" title="Pinterest"><i class="fa fa-pinterest fa-1x"></i></a></li>
+                        <li><a href="#" data-placement="top" title="Google plus"><i class="fa fa-google-plus fa-1x"></i></a></li>
+                    </ul>
+                </div>
+                
+
+            </div>
+        </div>
+    </div>
+</footer>-->
+<!--end footer-->
+
+<!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+<script src="js/jquery-2.1.1.min.js"></script>
+<!-- Include all compiled plugins (below), or include individual files as needed -->
+<script src="js/bootstrap.min.js"></script>
+<script src="js/responsive-slider.js"></script>
+<script src="js/wow.min.js"></script>
+<script>
+		 $(document).ready(function(){
+			$("#Wstd_fname").hide();
+			$("#Wstd_lname").hide();
+			$("#Wstd_id").hide();
+			$("#Wgpa").hide();
+			$("#Wpar_name").hide();
+			//std fname
+			$("#std_fname").focusout(function(){
+				if (!$("#std_fname").val()) {
+					$("#Wstd_fname").show();
+				} else {
+					$("#Wstd_fname").hide();
+				}
+			});
+			$("#std_fname").keyup(function(){
+				if (!$("#std_fname").val()) {
+					$("#Wstd_fname").show();
+				} else {
+					$("#Wstd_fname").hide();
+				}
+			});
+			//std lname
+			$("#std_lname").focusout(function(){
+				if (!$("#std_lname").val()) {
+					$("#Wstd_lname").show();
+				} else {
+					$("#Wstd_lname").hide();
+				}
+			});
+			$("#std_lname").keyup(function(){
+				if (!$("#std_lname").val()) {
+					$("#Wstd_lname").show();
+				} else {
+					$("#Wstd_lname").hide();
+				}
+			});
+			//std id
+			$("#std_id").focusout(function(){
+				if (!$("#std_id").val()) {
+					$("#Wstd_id").show();
+				} else {
+					$("#Wstd_id").hide();
+				}
+			});
+			$("#std_id").keyup(function(){
+				if (!$("#std_id").val()) {
+					$("#Wstd_id").show();
+				} else {
+					$("#Wstd_id").hide();
+				}
+			});
+			//gpa
+			$("#gpa").focusout(function(){
+				if (!$("#gpa").val()) {
+					$("#Wgpa").show();
+				} else {
+					$("#Wgpa").hide();
+				}
+			});
+			$("#gpa").keyup(function(){
+				if (!$("#gpa").val()) {
+					$("#Wgpa").show();
+				} else {
+					$("#Wgpa").hide();
+				}
+			});
+			//par name
+			$("#par_name").focusout(function(){
+				if (!$("#par_name").val()) {
+					$("#Wpar_name").show();
+				} else {
+					$("#Wpar_name").hide();
+				}
+			});
+			$("#par_name").keyup(function(){
+				if (!$("#par_name").val()) {
+					$("#Wpar_name").show();
+				} else {
+					$("#Wpar_name").hide();
+				}
+			});
+			//form
+			$("form").mouseover(function(){
+				if(!$("#std_fname").val() || !$("#std_lname").val() || !$("#std_id").val() ||  !$("#gpa").val() || !$("#par_name").val()) {
+					$("#submit").attr('disabled','disabled');
+				} else {
+					$("#submit").removeAttr('disabled');
+				}
+			});
+
+		 });
+</script>
+</body>
+</html>
+<?php
+	function select_dve01($conn,$std_id) {
+		$sql = "select stu_fname,stu_lname,student_id,gpa,par_fname,par_lname from std where student_id = '$std_id'";
+		$res = mysqli_query($conn,$sql);
+		return $res;
+	}
+	function select_group($conn) {
+		$sql = "select * from groups";
+		$res = mysqli_query($conn,$sql);
+		return $res;
+	}
+	function select_major($conn) {
+		$sql = "select * from major";
+		$res = mysqli_query($conn,$sql);
+		return $res;
+	}
+	function select_edu($conn) {
+		$sql = "select * from education";
+		$res = mysqli_query($conn,$sql);
+		return $res;
+	}
+?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

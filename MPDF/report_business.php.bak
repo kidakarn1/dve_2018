@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <title>Document</title>
+  <?php	
+include ("../connect/conn.php");
+
+ini_set('max_execution_time', 300); //300 seconds = 5 minutes
+ob_start();
+$year=$_POST['year'];
+$connect=$conn;
+$res_school=select_school($connect);
+$res_bus=select_bus($connect,$bus);
+$row_school=mysqli_fetch_assoc($res_school);
+$res_all=select_all($connect,$bus,$business_id,$trainer_id,$school,$res_bus);
+date_default_timezone_set('asia/bangkok');
+$year_de=date("Y");
+$year_de=$year_de+543;
+$mouth_de=date("m");
+$day_de=date("d");
+$date=substr($date,2,2);
+$date=$date+43;
+$number2 = array('01' => 'มกราคม',
+'02' => 'กุมภาพันธ์',
+'03' => 'มีนาคม',
+'04' => 'เมษายน',
+'05' => 'พฤษภาคม',
+'06' => 'มิถุนายน',
+'07' => 'กรกฎาคม',
+'08' => 'สิงหาคม',
+'09' => 'กันยายน',
+'10' => 'ตุลาคม',
+'11' => 'พฤศจิกายน',
+'12' => 'ธันวาคม',
+);
+$mouth_de = $number2[$mouth_de];
+?>
+
+ </head>
+  <body>
+	<table align = "center">
+ <tr>
+ <td><center><h2><?php echo $row_school["school_name"]?><center></td>
+ </tr>
+ <tr>
+ <td><center><h2>รายงานสรุปข้อมูลสถานประกอบการ</center></td>
+</tr>
+ </table>
+ <table border="1"width="80%" align = "center">
+ <tr>
+	<td><p><b><center>ลำดับที่</b></p></td>
+	<td><p><b><center>ชื่อสถานประกอบการ</b></p></td>
+	<td><p><b><center>ที่อยู่</b></p></td>
+	<td><p><b><center>เบอร์โทรศัพท์</b></p></td>
+	<td><p><b><center>ชื่อผู้ประสานงาน</b></p></td>
+	<td><p><b><center>หมายเหตุ</b></p></td>
+ </tr>
+<?php 
+	$i=0;
+	while ($row_all=mysqli_fetch_assoc($res_all)){
+	?>
+ <tr>
+	<td><?php echo ++$i?></td>
+	<td><?php echo $row_all['business_name']?></td>
+	<td><?php echo "เลขที่ ".$row_all["address_no"]." ถนน ".$row_all["road"]." ตำบล ".$row_all["DISTRICT_NAME"]." อำเภอ ".$row_all["AMPHUR_NAME"]." จังหวัด ".$row_all["PROVINCE_NAME"];?></td>
+    <td><?php echo $row_all['contact_phone']?></td>
+    <td><?php echo $row_all['contact']?></td>
+	<td></td>
+ </tr>
+<?php }?>
+ </table>
+
+ <table width="1000">
+   <tr>
+     <td colspan="7" align = "right"><p>วันที่ทำรายงาน<?php echo " ".$day_de." ".$mouth_de." ".$year_de?></p></td>
+ </tr>
+  </table>
+
+  </center>
+  
+  
+ </body>
+</html>
+<?php
+
+function select_school($connect){
+$sql="select * from school";
+$res=mysqli_query($connect,$sql);
+return $res;
+}
+function select_bus($connect,$bus){
+	$sql = "select * from business,district,province,amphur,normal 
+	where business.district_id = district.DISTRICT_CODE  and 
+	district.AMPHUR_CODE = amphur.AMPHUR_CODE  and 
+	amphur.PROVINCE_CODE = province.PROVINCE_CODE  and
+	business.business_id = normal.business_id ";
+	$res=mysqli_query($connect,$sql);
+	return $res;
+	}
+
+	function select_all($connect,$bus,$business_id){
+	$sql="select * from trainer,business where trainer.business_id = business.business_id" ;
+	$res=mysqli_query($connect,$sql);
+	return $res; 
+	}
+	
+
+?>

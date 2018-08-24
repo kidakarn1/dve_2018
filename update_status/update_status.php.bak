@@ -1,0 +1,14 @@
+<?php 
+include("../connect/conn.php");
+$id=$_GET['id'];
+$sql="update training_normal set normal_status = 'อนุมัติสถานประกอบการ' where normal_id = '$id'";
+$res=mysqli_query($conn,$sql);
+if ($res){
+    echo "<script> alert ('อัฟเดชสถานะเรียบร้อบ');
+                  window.location.href='select_normal.php';
+          </script>";
+}
+else{
+
+}
+?>

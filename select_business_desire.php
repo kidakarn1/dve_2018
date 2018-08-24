@@ -1,0 +1,164 @@
+<?php
+include("connect/conn.php");
+session_start();
+$res_business = select_business($conn);
+$business_id = $_POST["business_id"];
+$Num_Rows=select_count($conn);
+$serch = $_POST["serch"];
+echo $s_limit = $_REQUEST["s"];
+echo $e_limit_mk = $_REQUEST["e"];
+echo $pages = $_REQUEST["page"];
+
+$Per_Page = 10;   // จำนวนข้อมูลต้องการโชว์ ตึ๋งเอง 
+$Page = $_GET["Page"];
+if(!$_GET["Page"])
+{
+	$Page=1;
+}
+$Prev_Page = $Page-1;
+$Next_Page = $Page+1;
+$Page_Start = (($Per_Page*$Page)-$Per_Page);
+if($Num_Rows<=$Per_Page)
+{
+	$Num_Pages =1;
+}
+else if(($Num_Rows % $Per_Page)==0)
+{
+	$Num_Pages =($Num_Rows/$Per_Page) ;
+}
+else
+{
+	$Num_Pages =($Num_Rows/$Per_Page)+1;
+	$Num_Pages = (int)$Num_Pages;
+}
+
+$sql2 = "select * from business,business_desire,minor,education where business_desire.business_id = business.business_id
+and business_desire.minor_id = minor.minor_id
+and business_desire.education = education.edu_id and (business.business_name like '%$serch%' or minor.minor_name like '%$serch%' or business_desire.system_id like '%$serch%') limit  $Page_Start , $Per_Page";
+$res2=mysqli_query($conn,$sql2);
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+        <meta name="author" content="GeeksLabs">
+        <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+        <link rel="shortcut icon" href="img/favicon.png">
+
+        <title>select_training_normal</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <!-- bootstrap theme -->
+        <link href="css/bootstrap-theme.css" rel="stylesheet">
+        <!--external css-->
+        <!-- font icon -->
+        <link href="css/elegant-icons-style.css" rel="stylesheet" />
+        <link href="css/font-awesome.min.css" rel="stylesheet" />
+        <!-- full calendar css-->
+        <link href="assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+        <link href="assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+        <!-- easy pie chart-->
+        <link href="assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
+        <!-- owl carousel -->
+        <link rel="stylesheet" href="css/owl.carousel.css" type="text/css">
+        <link href="css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="css/fullcalendar.css">
+        <link href="css/widgets.css" rel="stylesheet">
+        <link href="css/style.css" rel="stylesheet"> 
+        <link href="css/style-responsive.css" rel="stylesheet" />
+        <link href="css/xcharts.min.css" rel=" stylesheet">
+        <link href="css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+
+    </head>
+ <?php include "menu.php"; ?>
+        <section id="main-content">
+            <section class="wrapper">
+                <!--overview start-->
+                <div class="col-lg-12">
+                    <h3 class="page-header" style="color: red;"><i style="color: red;" class="icon_star-half_alt"></i><b>ความต้องการของสถานประกอบการ</b></h3>
+<div class="form-group"> 
+<div class="text-right"> 
+<form method="post" action="">
+
+        <input type="text" name="serch"class="control">
+
+        <input type="submit" value="ค้นหา" class="btn btn-success">
+</form>
+</div></div>
+
+  <div class="table-responsive">
+  <table class="table text-center">
+    <tr>
+        <th>ลำดับ</th>
+        <th><center>ชื่อสถานประกอบการ</center></th>
+        <th>สาขาวิชา</th>
+        <th>การศึกษา</th>
+        <th>จำนวน</th>
+        <th>รายละเอียด</th>
+        <th>ภาคเรียน</th>
+        <th>ระบบ</th>
+    </tr>
+    <?php $i=1;while ($row2 = mysqli_fetch_assoc($res2)){?>
+    <tr>
+        <td><?php echo $i;?></td>
+        <td><?php echo $row2["business_name"]?></td>
+        <td><?php echo $row2["minor_name"]?></td>
+        <td><?php echo $row2["edu_name"]?></td>
+        <td><?php echo $row2["desire_number"]?></td>
+        <td><?php echo $row2["attribute"]?></td>
+        <td><?php echo $row2["duration"]?></td>
+        <td><?php if($row2["system_id"]==2){
+                    echo "ระบบทวิภาคี";
+                  }
+                  else if ($row2["system_id"]==1){
+                    echo "ระบบปกติ";
+                  }
+        ?></td>
+    </tr>
+    <?php
+    $i++;}?>
+</table>
+<br>
+ข้อมูลทั้งหมด <?= $Num_Rows;?>  หน้า :
+<?php
+if($Prev_Page)
+{
+	echo " <a href='$_SERVER[SCRIPT_NAME]?Page=$Prev_Page'><< ก่อนหน้า</a> ";
+}
+
+for($i=1; $i<=$Num_Pages; $i++){
+	if($i != $Page)
+	{
+		echo "[ <a href='$_SERVER[SCRIPT_NAME]?Page=$i'>$i</a> ]";
+	}
+	else
+	{
+		echo "<b> $i </b>";
+	}
+}
+if($Page!=$Num_Pages)
+{
+	echo " <a href ='$_SERVER[SCRIPT_NAME]?Page=$Next_Page'>หน้าต่อไป>></a> ";
+}
+?>
+</body>
+</html>
+<?php
+function select_business($conn){
+        $sql = "select * from business";
+        $res = mysqli_query($conn,$sql);
+        return $res;
+}
+function select_count ($conn){
+        $sql = "select * from business_desire";
+        $res = mysqli_query($conn,$sql);
+        $row = mysqli_num_rows($res);
+        return $row;
+}
+?>

@@ -1,0 +1,131 @@
+<?php 
+    include("../connect/conn.php");
+    SESSION_START();
+    ini_set('max_execution_time', 3000); 
+    $serch=$_POST["serch"];
+    if (isset($_GET["business_id"])=="true"){
+        $_SESSION["business_id"]=$business_id=$_GET["business_id"];
+    }
+    if (isset($_GET["business_id"])=="false"){
+        $_SESSION["business_id"]=$business_id=$_SESSION["business_id"];
+    }
+//    echo  $_SESSION["business_id"]=$business_id=$_GET["business_id"];
+    $res_student=select_student($conn,$_SESSION["business_id"],$serch);
+?>
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+        <meta name="author" content="GeeksLabs">
+        <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+        <link rel="shortcut icon" href="../img/favicon.png">
+        <title>select_department</title>
+        <!-- Bootstrap CSS -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- bootstrap theme -->
+        <link href="../css/bootstrap-theme.css" rel="stylesheet">
+        <!--external css-->
+        <!-- font icon -->
+        <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" />
+        <!-- full calendar css-->
+        <link href="../assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+        <link href="../assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+        <!-- easy pie chart-->
+        <link href="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
+        <!-- owl carousel -->
+        <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+        <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="../css/fullcalendar.css">
+        <link href="../css/widgets.css" rel="stylesheet">
+        <link href="../css/style.css" rel="stylesheet"> 
+        <link href="../css/style-responsive.css" rel="stylesheet" />
+        <link href="../css/xcharts.min.css" rel=" stylesheet">
+        <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    </head>
+	 <body>
+        <?php include '../menu2.php'; ?>
+        <section id="main-content">
+            <section class="wrapper">
+                <!--overview start-->
+
+                <div class="col-lg-12">
+                    <h3 class="page-header" style="color: red;"><i style="color: red;" class="fa fa-laptop"></i>แผนก</h3>
+
+                </div>
+                
+<form method="post" action="">
+  
+         <div class="col-sm-3 col-sm-offset-9">
+    <input type="text" name="serch" >
+
+    <input type="submit" value="ตกลง"class="btn btn-md btn-success">
+	</div>
+</form>
+
+
+<table class='table text-center'>
+        <tr>
+            <th>ลำดับ</th>
+            <th>รหัสนักศึกษา</th>
+            <th>ชื่อ-สกุล</th>
+            <th>ระดับชั้น</th>
+            <th>แผนก</th>
+            <th>ประเมิน</th>
+        </tr>
+    <?php
+    if (isset($res_student)=="true"){ 
+        $i=1;
+        while ($row_student=mysqli_fetch_assoc($res_student)){
+            $_SESSION["std_id"] = $row_student["std_id"];
+            $res_check_student=select_evaluation_results($conn,$_SESSION["std_id"]);
+            $row_check_student=mysqli_fetch_assoc($res_check_student);
+            ?>
+        <tr>
+            <th><?php echo $i?></th>
+            <th><?php echo $row_student["std_id"]?></th>
+            <th><?php echo $row_student["head_name_std"]." ".$row_student["std_name"]?></th>
+            <th><?php echo $row_student["group_name"]?></th>
+            <th><?php echo "ช่าง".$row_student["dep_name"]?></th>
+            <th>
+                <?php if ($row_check_student["student_id"]!=$row_student["std_id"]){?>
+                            <a href="../evaluation/eva_5.php?id=<?php echo $row_student["std_id"];?>">ประเมิน</a>
+                        <?php 
+                        }
+                        else{
+                            echo "<font color='green'>ประเมินเสร็จสิ้น</font>";
+                            ?>
+                            <a href="../evaluation/from_update_eva_5.php?id=<?php echo $row_student["std_id"];?>"><input type="submit" value="แก้ไขการประเมิน"></a> |
+                            <a href="print_scroe_student.php?id=<?php echo $row_student["std_id"];?>"><input type="submit" value="รายงานคะแนน"></a></a>
+                        <?php
+                        }
+                        ?>
+            </th>
+        </tr>
+    <?php 
+    $i++;}
+    }
+    ?>
+    </table>
+<?php
+    function select_student($conn,$business_id,$serch){
+    $sql="select * from training_normal,student,groups,department where training_normal.normal_status = 'กำลังฝึก' and
+         training_normal.business_id = '{$business_id}' and
+         training_normal.citizen_id = student.citizen_id and
+         student.group_id = groups.group_id and
+         groups.dep_id  = department.dep_id and 
+         student.std_id like '%$serch%' ";
+    $res=mysqli_query($conn,$sql);
+    return $res;
+        }
+    function select_evaluation_results($conn,$std_id){
+        $sql="select * from evaluation_results where student_id = '{$std_id}' ";
+        $res=mysqli_query($conn,$sql);
+        return $res;
+        }
+?>

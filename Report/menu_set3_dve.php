@@ -1,0 +1,83 @@
+<?php
+include("../connect/conn.php");
+$connect = $conn;
+@SESSION_START();
+$_SESSION["business_id"];
+$_SESSION["edu_id"];
+$res_business_id = business_id($connect);
+?>
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+        <meta name="author" content="GeeksLabs">
+        <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+        <link rel="shortcut icon" href="../img/favicon.png">
+
+        <title>select_department</title>
+
+        <!-- Bootstrap CSS -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- bootstrap theme -->
+        <link href="../css/bootstrap-theme.css" rel="stylesheet">
+        <!--external css-->
+        <!-- font icon -->
+        <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" />
+        <!-- full calendar css-->
+        <link href="../assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+        <link href="../assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+        <!-- easy pie chart-->
+        <link href="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
+        <!-- owl carousel -->
+        <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+        <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="../css/fullcalendar.css">
+        <link href="../css/widgets.css" rel="stylesheet">
+        <link href="../css/style.css" rel="stylesheet"> 
+        <link href="../css/style-responsive.css" rel="stylesheet" />
+        <link href="../css/xcharts.min.css" rel=" stylesheet">
+        <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+    </head>
+    <body>
+<?php include "../menu2.php"; ?>
+        <section id="main-content">
+            <section class="wrapper">
+                <!--overview start-->
+                <div class="col-lg-12">
+                    <h3 class="page-header" style="color: red;"><i style="color: red;" class="icon_star-half_alt"></i><b>หนังสือส่งตัว</b></h3>
+                </div>
+                <div class="table-responsive">
+                    <table class="table text-center">
+                        <tr>
+                            <th><h4><a href="../fpdf17/b_dve.php?business_id=<?php echo $_SESSION['business_id']?>"> ขอส่งรายชื่อนักเรียน / นักศึกษาเข้าฝึกปฏิบัติงาน</a>|</h4></th>
+                            <th><h4><a href="../fpdf17/print_Send_off_dve.php?business_id=<?php echo $_SESSION['business_id']?>">หนังสือตอบกลับ |</h4></th>
+                            <th><h4><a href="select_certificate_bilateral.php">หนังสือรับรองทวิ |</h4></th>
+                        </tr>
+                    </table>
+                </div>
+            </section>
+ 
+    </body>
+</html>
+<?php
+	function business_id($connect) {
+$business_id=$_POST["business_id"];
+$sql_b="select *,business.road from business,district,amphur,province,training_dve,student,major,department 
+where business.district_id=district.DISTRICT_CODE 
+and business.aumphur_id=amphur.AMPHUR_CODE 
+and business.province_id=province.PROVINCE_CODE 
+and business.business_id=training_dve.business_id 
+and training_dve.citizen_id=student.citizen_id
+and student.major_id = major.major_id 
+and student.dep_id = department.dep_id 
+and business.business_id= '$business_id'
+";
+$res = mysqli_query($connect, $sql_b);
+    return $res;
+}
+?>

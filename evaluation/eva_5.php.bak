@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="Creative - Bootstrap 3 Responsive Admin Template">
+        <meta name="author" content="GeeksLabs">
+        <meta name="keyword" content="Creative, Dashboard, Admin, Template, Theme, Bootstrap, Responsive, Retina, Minimal">
+        <link rel="shortcut icon" href="../img/favicon.png">
+        <title>select_department</title>
+        <!-- Bootstrap CSS -->
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <!-- bootstrap theme -->
+        <link href="../css/bootstrap-theme.css" rel="stylesheet">
+        <!--external css-->
+        <!-- font icon -->
+        <link href="../css/elegant-icons-style.css" rel="stylesheet" />
+        <link href="../css/font-awesome.min.css" rel="stylesheet" />
+        <!-- full calendar css-->
+        <link href="../assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css" rel="stylesheet" />
+        <link href="../assets/fullcalendar/fullcalendar/fullcalendar.css" rel="stylesheet" />
+        <!-- easy pie chart-->
+        <link href="../assets/jquery-easy-pie-chart/jquery.easy-pie-chart.css" rel="stylesheet" type="text/css" media="screen" />
+        <!-- owl carousel -->
+        <link rel="stylesheet" href="../css/owl.carousel.css" type="text/css">
+        <link href="../css/jquery-jvectormap-1.2.2.css" rel="stylesheet">
+        <!-- Custom styles -->
+        <link rel="stylesheet" href="../css/fullcalendar.css">
+        <link href="../css/widgets.css" rel="stylesheet">
+        <link href="../css/style.css" rel="stylesheet"> 
+        <link href="../css/style-responsive.css" rel="stylesheet" />
+        <link href="../css/xcharts.min.css" rel=" stylesheet">
+        <link href="../css/jquery-ui-1.10.4.min.css" rel="stylesheet">
+    </head>
+    <?php include '../menu2.php'; ?>
+    <?php
+    include('../connect/conn.php');
+    session_start();
+    $_SESSION["std_id"]=$_GET["id"];
+    $eva_id = 5;
+    $resTop = get_top($conn, $eva_id);
+    ?>
+    <body>
+        <section id="main-content">
+            <section class="wrapper">
+                <div class="col-sm-12">
+                    <div class="col-sm-6">
+                        <h3 class="page-header" style="color: red;"><i style="color: red;" class="fa fa-laptop"></i><b>ตารางการประเมิน</b></h3>
+                    </div>
+                    <form class="form-horizontal" method="post" action="insert_eva.php">
+                        <input type="hidden" name="eva_id" value="<?php echo $eva_id; ?>">
+                        <table border="1"class="table text-center">
+                            <tr>
+                                <td rowspan="2">รายการประเมิน</td>
+                                <td >ระดับความพึงพอใจ</td>
+                            </tr>
+                            <tr>
+                                <td id="nested">
+                                    <table id="table2" width="100%" style="text-align: center;">
+                                        <tr>
+                                            <td style="border-left: 1px solid black; width: 50px;">ดีมาก<br>4</td>
+                                            <td style="border-left: 1px solid black; width: 50px;">ดี<br>3</td>
+                                            <td style="border-left: 1px solid black; width: 50px;">พอใช้<br>2</td>
+                                            <td style="border-left: 1px solid black; width: 50px;">ต้องปรับปรุง<br>1</td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                            <?php while ($rowTop = mysqli_fetch_array($resTop)) { ?>
+                                <tr>
+                                    <td id="nested">
+                                        <table id="table2"  width="100%"  border="1" height="100%"style="text-align: left;" >
+
+                                            <?php
+                                            $i = 0;
+                                            $resQue = get_que($conn, $eva_id, $rowTop["topics_id"]);
+                                            while ($rowQue = mysqli_fetch_array($resQue)) {
+                                                ?>
+                                                <tr>
+                                                    <td><?php echo ++$i . "." . $rowQue["Que_name"] ?></td>
+                                                </tr>
+                                            <?php } ?>
+                                        </table>
+                                    </td>
+                                    <td id="nested">
+                                        <?php
+                                        $resRa = get_que($conn, $eva_id, $rowTop["topics_id"]);
+                                       $i=1;
+                                        while ($rowRa = mysqli_fetch_array($resRa)) {
+                                            ?>
+                                            <table id="table2" width="100%" style="border-bottom: 0.5px solid black; text-align: center;">
+                                                <tr>
+                                                    <td><input type="radio" class="scroe<?php echo $i?>" id="4" name="<?php echo $rowRa["Que_id"]; ?>" value="4"></td>
+                                                    <td><input type="radio" class="scroe<?php echo $i?>" id="3" name="<?php echo $rowRa["Que_id"]; ?>" value="3"></td>
+                                                    <td><input type="radio" class="scroe<?php echo $i?>" id="2" name="<?php echo $rowRa["Que_id"]; ?>" value="2"></td>
+                                                    <td><input type="radio" class="scroe<?php echo $i?>" id="1" name="<?php echo $rowRa["Que_id"]; ?>" value="1"></td>
+                                                </tr>
+                                            </table>
+                                        <?php $i++; } ?>
+                                    </td>
+                                </tr>
+                                <?php 
+                                ?>
+                            <?php } ?>
+                            <tr>
+                                <th></th>
+                                <th colspan="2">คะแนนรวม   <div id="scroe"></div>คะแนน</th>
+                            </tr>
+                        </table>
+                        <div class="text-center">
+                            <?php if ($_SESSION['status'] == 'Teacher' or $_SESSION['status'] == 'Trainer') { ?>
+                                <input class="btn btn-md btn-success" type="submit" value="ตกลง">                    
+                            <?php } ?>
+                        </div>
+                    </form>
+            </section>
+        </section>
+    </body>
+</html>
+<?php
+
+function get_que($conn, $id, $top_id) {
+    $sql = "select * from question where eva_id = '$id' and topics_id = '$top_id' ";
+    $res = mysqli_query($conn, $sql);
+    return $res;
+}
+
+function get_top($conn, $id) {
+    $sql = "select * from question where question.eva_id = '$id' group by question.topics_id";
+    $res = mysqli_query($conn, $sql);
+    return $res;
+}
+?>
+<ul>
+  <li>Eat</li>
+  <li>Sleep</li>
+  <li>Be merry</li>
+</ul>
+<script src="../js/jquery-3.3.1.min.js"></script>
+<script>
+$(document).ready(function(){
+    var score=0;
+    var score2=0;
+    var score3=0;
+    var score4=0;
+    var score5=0;
+    var totalScore = 0;
+
+    $(".scroe1").click(function(){
+        score=parseInt($(this).attr("id"));
+        totalScore=score+score2+score3+score4+score5;
+         $("#scroe").html(totalScore);
+    });
+    $(".scroe2").click(function(){
+        score2=parseInt($(this).attr("id"));
+        totalScore=score+score2+score3+score4+score5;
+         $("#scroe").html(totalScore);
+    });
+    $(".scroe3").click(function(){
+        score3=parseInt($(this).attr("id"));
+        totalScore=score+score2+score3+score4+score5;
+         $("#scroe").html(totalScore);
+    });
+    $(".scroe4").click(function(){
+        score4=parseInt($(this).attr("id"));
+        totalScore=score+score2+score3+score4+score5;
+         $("#scroe").html(totalScore);
+    });
+    $(".scroe5").click(function(){
+        score5=parseInt($(this).attr("id"));
+        totalScore=score+score2+score3+score4+score5;
+         $("#scroe").html(totalScore);
+    });
+});
+</script>

@@ -1,0 +1,12 @@
+<?php 
+include("../connect/conn.php");
+echo $id=$_GET['id'];
+$sql="update training set training_status = 'อนุมัติสถานประกอบการ' where training_id='$id'";
+$res=mysqli_query($conn,$sql);
+if ($res){
+header("location: select_bilateral.php");
+}
+else{
+
+}
+?>
